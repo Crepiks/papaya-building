@@ -1,10 +1,9 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import bricksTexture from "../assets/bricks-texture.jpeg";
 
 const FOUNDATION_HEIGHT = 0.2;
 const FLOOR_HEIGTH = 1.6;
-const ODD_FLOORS_COLOR = 0xc4989a;
-const EVEN_FLOORS_COLOR = 0x9a8c8c;
 
 main();
 
@@ -26,17 +25,9 @@ function main() {
   const floors = [];
 
   buildFoundation(scene);
-  floors.push(buildFloor(scene, FOUNDATION_HEIGHT / 2, ODD_FLOORS_COLOR));
-  floors.push(
-    buildFloor(scene, FOUNDATION_HEIGHT / 2 + FLOOR_HEIGTH, EVEN_FLOORS_COLOR)
-  );
-  floors.push(
-    buildFloor(
-      scene,
-      FOUNDATION_HEIGHT / 2 + FLOOR_HEIGTH * 2,
-      ODD_FLOORS_COLOR
-    )
-  );
+  floors.push(buildFloor(scene, FOUNDATION_HEIGHT / 2));
+  floors.push(buildFloor(scene, FOUNDATION_HEIGHT / 2 + FLOOR_HEIGTH));
+  floors.push(buildFloor(scene, FOUNDATION_HEIGHT / 2 + FLOOR_HEIGTH * 2));
 
   buildTree(scene, 10, -10);
   buildTree(scene, 10, -8);
@@ -107,9 +98,11 @@ function buildFoundation(scene) {
   return box;
 }
 
-function buildFloor(scene, baseY = FOUNDATION_HEIGHT / 2, color) {
+function buildFloor(scene, baseY = FOUNDATION_HEIGHT / 2) {
+  const texture = new THREE.TextureLoader().load(bricksTexture);
+
   const group = new THREE.Group();
-  const material = new THREE.MeshStandardMaterial({ color });
+  const material = new THREE.MeshStandardMaterial({ map: texture });
   const boxGeometry = new THREE.BoxGeometry(6, FLOOR_HEIGTH, 10);
   const box = new THREE.Mesh(boxGeometry, material);
 
@@ -139,23 +132,9 @@ function listenToFloorsChange(scene, floors) {
   addFloorButton.addEventListener("click", createNewFloor);
 
   function createNewFloor() {
-    if (floors.length % 2 === 0) {
-      floors.push(
-        buildFloor(
-          scene,
-          FOUNDATION_HEIGHT / 2 + FLOOR_HEIGTH * floors.length,
-          ODD_FLOORS_COLOR
-        )
-      );
-    } else {
-      floors.push(
-        buildFloor(
-          scene,
-          FOUNDATION_HEIGHT / 2 + FLOOR_HEIGTH * floors.length,
-          EVEN_FLOORS_COLOR
-        )
-      );
-    }
+    floors.push(
+      buildFloor(scene, FOUNDATION_HEIGHT / 2 + FLOOR_HEIGTH * floors.length)
+    );
     setNumberOfFloors(floors.length);
   }
 
@@ -231,7 +210,7 @@ function buildCar(scene) {
   car.add(frontWheel);
 
   const main = new THREE.Mesh(
-    new THREE.BufferGeometry(60, 15, 30),
+    new THREE.BoxBufferGeometry(60, 15, 30),
     new THREE.MeshLambertMaterial({ color: 0xa52523 })
   );
   main.position.y = 12;
@@ -248,7 +227,7 @@ function buildCar(scene) {
   carLeftSideTexture.rotation = Math.PI;
   carLeftSideTexture.flipY = false;
 
-  const cabin = new THREE.Mesh(new THREE.BufferGeometry(33, 12, 24), [
+  const cabin = new THREE.Mesh(new THREE.BoxBufferGeometry(33, 12, 24), [
     new THREE.MeshLambertMaterial({ map: carFrontTexture }),
     new THREE.MeshLambertMaterial({ map: carBackTexture }),
     new THREE.MeshLambertMaterial({ color: 0xffffff }),
@@ -267,7 +246,7 @@ function buildCar(scene) {
 }
 
 function createWheels() {
-  const geometry = new THREE.BufferGeometry(12, 12, 33);
+  const geometry = new THREE.BoxBufferGeometry(12, 12, 33);
   const material = new THREE.MeshLambertMaterial({ color: 0x333333 });
   const wheel = new THREE.Mesh(geometry, material);
   return wheel;
