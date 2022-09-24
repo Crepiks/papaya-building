@@ -1,6 +1,5 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import bricksTexture from "../assets/bricks-texture.jpeg";
 
 const FOUNDATION_HEIGHT = 0.2;
 const FLOOR_HEIGTH = 1.6;
@@ -104,9 +103,8 @@ function buildFoundation(scene) {
 
 function buildRoof(scene, floors) {
   const group = new THREE.Group();
-  const texture = new THREE.TextureLoader().load(bricksTexture);
   const geometry = new THREE.BoxBufferGeometry(4, 1, 2);
-  const material = new THREE.MeshLambertMaterial({ map: texture });
+  const material = new THREE.MeshLambertMaterial({ color: 0xdadae4 });
   const roof1 = new THREE.Mesh(geometry, material);
   const roof2 = new THREE.Mesh(geometry, material);
   const roof3 = new THREE.Mesh(geometry, material);
@@ -137,10 +135,8 @@ function buildRoof(scene, floors) {
 }
 
 function buildFloor(scene, baseY = FOUNDATION_HEIGHT / 2) {
-  const texture = new THREE.TextureLoader().load(bricksTexture);
-
   const group = new THREE.Group();
-  const material = new THREE.MeshStandardMaterial({ map: texture });
+  const material = new THREE.MeshStandardMaterial({ color: 0xdadae4 });
 
   const wall1 = new THREE.Mesh(
     new THREE.BoxGeometry(6.2, FLOOR_HEIGTH, 0.2),
