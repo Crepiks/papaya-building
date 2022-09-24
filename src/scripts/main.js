@@ -6,8 +6,7 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x446481);
+const scene = buildScene();
 
 buildLights();
 
@@ -16,16 +15,23 @@ const camera = buildCamera();
 const orbit = new OrbitControls(camera, renderer.domElement);
 orbit.update();
 
-const axesHelper = new THREE.AxesHelper(3);
-scene.add(axesHelper);
+const floors = [];
 
 const FOUNDATION_HEIGHT = 0.2;
-const FLOOR_HEIGTH = 1;
+const FLOOR_HEIGTH = 0.8;
+const ODD_FLOORS_COLOR = 0xc4989a;
+const EVEN_FLOORS_COLOR = 0x9a8c8c;
 
 buildFoundation();
-buildFloor(FOUNDATION_HEIGHT / 2, 0xc4989a);
-buildFloor(FOUNDATION_HEIGHT / 2 + FLOOR_HEIGTH, 0xeb9665);
-buildFloor(FOUNDATION_HEIGHT / 2 + FLOOR_HEIGTH * 2, 0xc4989a);
+floors.push(buildFloor(FOUNDATION_HEIGHT / 2, ODD_FLOORS_COLOR));
+floors.push(
+  buildFloor(FOUNDATION_HEIGHT / 2 + FLOOR_HEIGTH, EVEN_FLOORS_COLOR)
+);
+floors.push(
+  buildFloor(FOUNDATION_HEIGHT / 2 + FLOOR_HEIGTH * 2, ODD_FLOORS_COLOR)
+);
+
+renderer.setAnimationLoop(animate);
 
 function animate() {
   orbit.update();
@@ -33,7 +39,14 @@ function animate() {
   renderer.render(scene, camera);
 }
 
-renderer.setAnimationLoop(animate);
+listenToFloorsChange();
+
+function buildScene() {
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x446481);
+
+  return scene;
+}
 
 function buildCamera() {
   const camera = new THREE.PerspectiveCamera(
@@ -62,7 +75,7 @@ function buildLights() {
 }
 
 function buildFoundation() {
-  const boxGeometry = new THREE.BoxGeometry(10, FOUNDATION_HEIGHT, 10);
+  const boxGeometry = new THREE.BoxGeometry(14, FOUNDATION_HEIGHT, 14);
   const boxMaterial = new THREE.MeshStandardMaterial({ color: 0xdeb775 });
   const box = new THREE.Mesh(boxGeometry, boxMaterial);
 
@@ -74,7 +87,7 @@ function buildFoundation() {
 }
 
 function buildFloor(baseY = FOUNDATION_HEIGHT / 2, color) {
-  const boxGeometry = new THREE.BoxGeometry(3, FLOOR_HEIGTH, 3);
+  const boxGeometry = new THREE.BoxGeometry(6, FLOOR_HEIGTH, 6);
   const boxMaterial = new THREE.MeshStandardMaterial({ color });
   const box = new THREE.Mesh(boxGeometry, boxMaterial);
 
@@ -83,4 +96,40 @@ function buildFloor(baseY = FOUNDATION_HEIGHT / 2, color) {
   scene.add(box);
 
   return box;
+}
+
+function listenToFloorsChange() {
+  const removeFloorButton = document.getElementById("remove-floor-button");
+  removeFloorButton.addEventListener("click", () => {
+    const floor = floors.pop();
+    scene.remove(floor);
+    setNumberOfFloors(floors.length);
+  });
+
+  const addFloorButton = document.getElementById("add-floor-button");
+  addFloorButton.addEventListener("click", createNewFloor);
+
+  function createNewFloor() {
+    if (floors.length % 2 === 0) {
+      floors.push(
+        buildFloor(
+          FOUNDATION_HEIGHT / 2 + FLOOR_HEIGTH * floors.length,
+          ODD_FLOORS_COLOR
+        )
+      );
+    } else {
+      floors.push(
+        buildFloor(
+          FOUNDATION_HEIGHT / 2 + FLOOR_HEIGTH * floors.length,
+          EVEN_FLOORS_COLOR
+        )
+      );
+    }
+    setNumberOfFloors(floors.length);
+  }
+
+  function setNumberOfFloors(value) {
+    const numberOfFloorsLabel = document.getElementById("number-of-floors");
+    numberOfFloorsLabel.innerText = value;
+  }
 }
