@@ -3,6 +3,18 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 const FOUNDATION_HEIGHT = 0.2;
 const FLOOR_HEIGTH = 1.6;
+const WALL_COLOR = 0xdadae4;
+
+const floors = [];
+
+const mousePosition = new THREE.Vector2();
+
+window.addEventListener("mousemove", (event) => {
+  mousePosition.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mousePosition.y = -(event.clientY / window.innerHeight) * 2 + 1;
+});
+
+const rayCaster = new THREE.Raycaster();
 
 main();
 
@@ -39,6 +51,25 @@ function main() {
 function animate(renderer, scene, camera, orbit) {
   orbit.update();
 
+  rayCaster.setFromCamera(mousePosition, camera);
+  const intersects = rayCaster.intersectObjects(scene.children, true);
+
+  for (const intersect of intersects) {
+    if (
+      floors.find((floor) =>
+        floor.children.find((child) => child.id === intersect.object.id)
+      )
+    ) {
+      intersect.object.material.color.set(0xf5bfc0);
+    } else {
+      floors.forEach((floor) => {
+        floor.children.forEach((child) => {
+          child.material.color.set(WALL_COLOR);
+        });
+      });
+    }
+  }
+
   renderer.render(scene, camera);
 }
 
@@ -72,7 +103,6 @@ function buildLights(scene) {
 }
 
 function buildBuilding(scene) {
-  const floors = [];
   let roof = null;
 
   buildFoundation(scene);
@@ -104,7 +134,7 @@ function buildFoundation(scene) {
 function buildRoof(scene, floors) {
   const group = new THREE.Group();
   const geometry = new THREE.BoxBufferGeometry(4, 1, 2);
-  const material = new THREE.MeshLambertMaterial({ color: 0xdadae4 });
+  const material = new THREE.MeshLambertMaterial({ color: WALL_COLOR });
   const roof1 = new THREE.Mesh(geometry, material);
   const roof2 = new THREE.Mesh(geometry, material);
   const roof3 = new THREE.Mesh(geometry, material);
@@ -136,7 +166,7 @@ function buildRoof(scene, floors) {
 
 function buildFloor(scene, baseY = FOUNDATION_HEIGHT / 2) {
   const group = new THREE.Group();
-  const material = new THREE.MeshStandardMaterial({ color: 0xdadae4 });
+  const material = new THREE.MeshStandardMaterial({ color: WALL_COLOR });
 
   const wall1 = new THREE.Mesh(
     new THREE.BoxGeometry(6.2, FLOOR_HEIGTH, 0.2),
