@@ -76,14 +76,10 @@ function buildLights(scene) {
   const light = new THREE.DirectionalLight(0xffffff, 1);
   light.position.set(20, 30, 30);
   scene.add(light);
-  const lightHelper = new THREE.DirectionalLightHelper(light, 5);
-  scene.add(lightHelper);
 
   const light2 = new THREE.DirectionalLight(0xffffff, 1);
   light2.position.set(-20, 30, -30);
   scene.add(light2);
-  const light2Helper = new THREE.DirectionalLightHelper(light2, 5);
-  scene.add(light2Helper);
 }
 
 function buildFoundation(scene) {
