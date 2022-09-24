@@ -264,44 +264,44 @@ function listenToFloorsChange(scene, floors, onChange = () => {}) {
 }
 
 function buildTree(scene, positionX, positionZ) {
-  geometry = new THREE.BoxGeometry(1, 1, 1);
+  const geometry = new THREE.BoxGeometry(1, 1, 1);
 
-  var leaveDarkMaterial = new THREE.MeshLambertMaterial({ color: 0x91e56e });
-  var leaveLightMaterial = new THREE.MeshLambertMaterial({ color: 0xa2ff7a });
-  var leaveDarkDarkMaterial = new THREE.MeshLambertMaterial({
+  const leaveDarkMaterial = new THREE.MeshLambertMaterial({ color: 0x91e56e });
+  const leaveLightMaterial = new THREE.MeshLambertMaterial({ color: 0xa2ff7a });
+  const leaveDarkDarkMaterial = new THREE.MeshLambertMaterial({
     color: 0x71b356,
   });
-  var stemMaterial = new THREE.MeshLambertMaterial({ color: 0x7d5a4f });
+  const stemMaterial = new THREE.MeshLambertMaterial({ color: 0x7d5a4f });
 
-  var stem = new THREE.Mesh(geometry, stemMaterial);
+  const stem = new THREE.Mesh(geometry, stemMaterial);
   stem.position.set(0, 0, 0);
   stem.scale.set(0.3, 1.5, 0.3);
 
-  var squareLeave01 = new THREE.Mesh(geometry, leaveDarkMaterial);
+  const squareLeave01 = new THREE.Mesh(geometry, leaveDarkMaterial);
   squareLeave01.position.set(0.5, 1.6, 0.5);
   squareLeave01.scale.set(0.8, 0.8, 0.8);
 
-  var squareLeave02 = new THREE.Mesh(geometry, leaveDarkMaterial);
+  const squareLeave02 = new THREE.Mesh(geometry, leaveDarkMaterial);
   squareLeave02.position.set(-0.4, 1.3, -0.4);
   squareLeave02.scale.set(0.7, 0.7, 0.7);
 
-  var squareLeave03 = new THREE.Mesh(geometry, leaveDarkMaterial);
+  const squareLeave03 = new THREE.Mesh(geometry, leaveDarkMaterial);
   squareLeave03.position.set(0.4, 1.7, -0.5);
   squareLeave03.scale.set(0.7, 0.7, 0.7);
 
-  var leaveDark = new THREE.Mesh(geometry, leaveDarkMaterial);
+  const leaveDark = new THREE.Mesh(geometry, leaveDarkMaterial);
   leaveDark.position.set(0, 1.2, 0);
   leaveDark.scale.set(1, 2, 1);
 
-  var leaveLight = new THREE.Mesh(geometry, leaveLightMaterial);
+  const leaveLight = new THREE.Mesh(geometry, leaveLightMaterial);
   leaveLight.position.set(0, 1.2, 0);
   leaveLight.scale.set(1.1, 0.5, 1.1);
 
-  var ground = new THREE.Mesh(geometry, leaveDarkDarkMaterial);
+  const ground = new THREE.Mesh(geometry, leaveDarkDarkMaterial);
   ground.position.set(0, -1, 0);
   ground.scale.set(2.4, 0.8, 2.4);
 
-  let tree = new THREE.Group();
+  const tree = new THREE.Group();
   tree.add(leaveDark);
   tree.add(leaveLight);
   tree.add(squareLeave01);
