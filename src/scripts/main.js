@@ -9,17 +9,9 @@ document.body.appendChild(renderer.domElement);
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x446481);
 
-const light = new THREE.DirectionalLight(0xffffff, 1);
-light.position.set(20, 30, 30);
-scene.add(light);
+buildLights();
 
-const camera = new THREE.PerspectiveCamera(
-  75,
-  window.innerWidth / window.innerHeight,
-  0.1,
-  1000
-);
-camera.position.set(10, 5, 10);
+const camera = buildCamera();
 
 const orbit = new OrbitControls(camera, renderer.domElement);
 orbit.update();
@@ -43,6 +35,32 @@ function animate() {
 
 renderer.setAnimationLoop(animate);
 
+function buildCamera() {
+  const camera = new THREE.PerspectiveCamera(
+    75,
+    window.innerWidth / window.innerHeight,
+    0.1,
+    1000
+  );
+  camera.position.set(10, 5, 10);
+
+  return camera;
+}
+
+function buildLights() {
+  const light = new THREE.DirectionalLight(0xffffff, 1);
+  light.position.set(20, 30, 30);
+  scene.add(light);
+  const lightHelper = new THREE.DirectionalLightHelper(light, 5);
+  scene.add(lightHelper);
+
+  const light2 = new THREE.DirectionalLight(0xffffff, 1);
+  light2.position.set(-20, 30, -30);
+  scene.add(light2);
+  const light2Helper = new THREE.DirectionalLightHelper(light2, 5);
+  scene.add(light2Helper);
+}
+
 function buildFoundation() {
   const boxGeometry = new THREE.BoxGeometry(10, FOUNDATION_HEIGHT, 10);
   const boxMaterial = new THREE.MeshStandardMaterial({ color: 0xdeb775 });
@@ -51,6 +69,8 @@ function buildFoundation() {
   box.position.set(0, 0, 0);
 
   scene.add(box);
+
+  return box;
 }
 
 function buildFloor(baseY = FOUNDATION_HEIGHT / 2, color) {
@@ -61,4 +81,6 @@ function buildFloor(baseY = FOUNDATION_HEIGHT / 2, color) {
   box.position.set(0, FLOOR_HEIGTH / 2 + baseY, 0);
 
   scene.add(box);
+
+  return box;
 }
