@@ -11,6 +11,10 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
     <style>
       * {
         margin: 0;
@@ -18,18 +22,77 @@
         box-sizing: border-box;
       }
 
+      body {
+        font-family: "Inter", sans-serif;
+      }
+
       .info {
         position: fixed;
-        top: 50px;
-        right: 50px;
-        padding: 10px;
+        top: 30px;
+        right: 30px;
+        width: 400px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
         background-color: white;
         border-radius: 6px;
+      }
+
+      .info__description {
+        color: #666;
+        font-size: 12px;
+      }
+
+      .info__title {
+        font-size: 32px;
+        font-weight: 600;
+      }
+
+      .info__buttons {
+        width: 100%;
+        margin-top: 10px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: 10px;
+      }
+
+      .info__button {
+        padding: 10px 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: none;
+        background-color: #edeef0;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      .info__button-icon {
+        margin-right: 6px;
+        font-size: 16px;
+        line-height: 1;
+      }
+
+      .info__button-text {
+        line-height: 1;
       }
     </style>
   </head>
   <body>
-    <div class="info">Info</div>
+    <div class="info">
+      <span class="info__description">Этажей</span>
+      <span class="info__title">3</span>
+      <div class="info__buttons">
+        <button class="info__button">
+          <i class="bx bx-minus info__button-icon"></i>
+          <span class="info__button-text">Убрать этаж</span>
+        </button>
+        <button class="info__button">
+          <i class="bx bx-plus info__button-icon"></i>
+          <span class="info__button-text">Добавить этаж</span>
+        </button>
+      </div>
+    </div>
     <script src="./scripts/main.js" type="module"></script>
   </body>
 </html>
