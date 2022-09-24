@@ -14,20 +14,12 @@ function main() {
   document.body.appendChild(renderer.domElement);
 
   const scene = buildScene();
-
-  buildLights(scene);
-
   const camera = buildCamera();
-
   const orbit = new OrbitControls(camera, renderer.domElement);
+  buildLights(scene);
   orbit.update();
 
-  const floors = [];
-
-  buildFoundation(scene);
-  floors.push(buildFloor(scene, FOUNDATION_HEIGHT / 2));
-  floors.push(buildFloor(scene, FOUNDATION_HEIGHT / 2 + FLOOR_HEIGTH));
-  floors.push(buildFloor(scene, FOUNDATION_HEIGHT / 2 + FLOOR_HEIGTH * 2));
+  buildBuilding(scene);
 
   buildTree(scene, 10, -10);
   buildTree(scene, 10, -8);
@@ -43,8 +35,6 @@ function main() {
   buildCar(scene);
 
   renderer.setAnimationLoop(() => animate(renderer, scene, camera, orbit));
-
-  listenToFloorsChange(scene, floors);
 }
 
 function animate(renderer, scene, camera, orbit) {
@@ -82,6 +72,24 @@ function buildLights(scene) {
   scene.add(light2);
 }
 
+function buildBuilding(scene) {
+  const floors = [];
+  let roof = null;
+
+  buildFoundation(scene);
+  floors.push(buildFloor(scene, FOUNDATION_HEIGHT / 2));
+  floors.push(buildFloor(scene, FOUNDATION_HEIGHT / 2 + FLOOR_HEIGTH));
+  floors.push(buildFloor(scene, FOUNDATION_HEIGHT / 2 + FLOOR_HEIGTH * 2));
+  roof = buildRoof(scene, floors);
+
+  listenToFloorsChange(scene, floors, () => {
+    scene.remove(roof);
+    if (floors.length > 0) {
+      roof = buildRoof(scene, floors);
+    }
+  });
+}
+
 function buildFoundation(scene) {
   const boxGeometry = new THREE.BoxGeometry(30, FOUNDATION_HEIGHT, 30);
   const boxMaterial = new THREE.MeshStandardMaterial({ color: 0xdeb775 });
@@ -92,6 +100,40 @@ function buildFoundation(scene) {
   scene.add(box);
 
   return box;
+}
+
+function buildRoof(scene, floors) {
+  const group = new THREE.Group();
+  const texture = new THREE.TextureLoader().load(bricksTexture);
+  const geometry = new THREE.BoxBufferGeometry(4, 2, 2);
+  const material = new THREE.MeshLambertMaterial({ map: texture });
+  const roof1 = new THREE.Mesh(geometry, material);
+  const roof2 = new THREE.Mesh(geometry, material);
+  const roof3 = new THREE.Mesh(geometry, material);
+
+  roof1.position.set(
+    0,
+    FOUNDATION_HEIGHT / 2 + FLOOR_HEIGTH * floors.length,
+    3
+  );
+  roof2.position.set(
+    0,
+    FOUNDATION_HEIGHT / 2 + FLOOR_HEIGTH * floors.length,
+    0
+  );
+  roof3.position.set(
+    0,
+    FOUNDATION_HEIGHT / 2 + FLOOR_HEIGTH * floors.length,
+    -3
+  );
+
+  group.add(roof1);
+  group.add(roof2);
+  group.add(roof3);
+
+  scene.add(group);
+
+  return group;
 }
 
 function buildFloor(scene, baseY = FOUNDATION_HEIGHT / 2) {
@@ -135,16 +177,21 @@ function buildFloor(scene, baseY = FOUNDATION_HEIGHT / 2) {
   }
 }
 
-function listenToFloorsChange(scene, floors) {
+function listenToFloorsChange(scene, floors, onChange = () => {}) {
   const removeFloorButton = document.getElementById("remove-floor-button");
   removeFloorButton.addEventListener("click", () => {
     const floor = floors.pop();
     scene.remove(floor);
     setNumberOfFloors(floors.length);
+
+    onChange();
   });
 
   const addFloorButton = document.getElementById("add-floor-button");
-  addFloorButton.addEventListener("click", createNewFloor);
+  addFloorButton.addEventListener("click", () => {
+    createNewFloor();
+    onChange();
+  });
 
   function createNewFloor() {
     floors.push(
