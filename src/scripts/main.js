@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { initializeLocationModal, openLocationModal } from "./location-modal";
 
 const FOUNDATION_HEIGHT = 0.2;
 const FLOOR_HEIGTH = 1.6;
@@ -19,6 +20,8 @@ const rayCaster = new THREE.Raycaster();
 main();
 
 function main() {
+  initializeLocationModal();
+
   const renderer = new THREE.WebGLRenderer();
 
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -61,6 +64,7 @@ function animate(renderer, scene, camera, orbit) {
       )
     ) {
       intersect.object.material.color.set(0xf5bfc0);
+      openLocationModal();
     } else {
       floors.forEach((floor) => {
         floor.children.forEach((child) => {

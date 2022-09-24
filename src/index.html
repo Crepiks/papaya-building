@@ -24,6 +24,11 @@
 
       body {
         font-family: "Inter", sans-serif;
+        user-select: none; /* supported by Chrome and Opera */
+        -webkit-user-select: none; /* Safari */
+        -khtml-user-select: none; /* Konqueror HTML */
+        -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
       }
 
       .info {
@@ -76,6 +81,58 @@
       .info__button-text {
         line-height: 1;
       }
+
+      .location-modal {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 400px;
+        padding: 20px;
+        display: none;
+        flex-direction: column;
+        background-color: white;
+        border-radius: 6px;
+      }
+
+      .location-modal__close {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size: 24px;
+        cursor: pointer;
+      }
+
+      .location-modal__path-button {
+        padding: 10px 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: none;
+        background-color: #edeef0;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      .location-modal__path-button-icon {
+        margin-right: 6px;
+        font-size: 16px;
+        line-height: 1;
+      }
+
+      .location-modal__path-button-text {
+        line-height: 1;
+      }
+
+      .location-modal__title {
+        font-size: 20px;
+        font-weight: 600;
+      }
+
+      .location-modal__subtitle {
+        margin-bottom: 30px;
+        color: #666;
+        font-size: 16px;
+      }
     </style>
   </head>
   <body>
@@ -92,6 +149,18 @@
           <span class="info__button-text">Добавить этаж</span>
         </button>
       </div>
+    </div>
+    <div class="location-modal" id="location-modal">
+      <i
+        class="bx bx-x location-modal__close"
+        id="location-modal-close-button"
+      ></i>
+      <span class="location-modal__title">Starbucks</span>
+      <span class="location-modal__subtitle">3 этаж, 40 метров, кофейня</span>
+      <button class="location-modal__path-button">
+        <i class="bx bx-current-location location-modal__path-button-icon"></i>
+        <span class="location-modal__path-button-text">Проложить маршрут</span>
+      </button>
     </div>
     <script src="./scripts/main.js" type="module"></script>
   </body>
