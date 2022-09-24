@@ -112,12 +112,31 @@ function buildFloor(scene, baseY = FOUNDATION_HEIGHT / 2) {
   roof.position.set(0, FLOOR_HEIGTH + baseY, 0);
   box.position.set(0, FLOOR_HEIGTH / 2 + baseY, 0);
 
+  const window1 = buildWindow();
+  window1.position.set(1.4, FLOOR_HEIGTH / 2 + baseY, 5);
+
+  const window2 = buildWindow();
+  window2.position.set(-1.4, FLOOR_HEIGTH / 2 + baseY, 5);
+
+  const window3 = buildWindow();
+  window3.position.set(0, FLOOR_HEIGTH / 2 + baseY, -5);
+
   group.add(roof);
   group.add(box);
+  group.add(window1);
+  group.add(window2);
+  group.add(window3);
 
   scene.add(group);
 
   return group;
+
+  function buildWindow() {
+    const geometry = new THREE.BoxBufferGeometry(0.8, 1, 0.1);
+    const window = new THREE.Mesh(geometry, material);
+
+    return window;
+  }
 }
 
 function listenToFloorsChange(scene, floors) {
