@@ -105,7 +105,7 @@ function buildFoundation(scene) {
 function buildRoof(scene, floors) {
   const group = new THREE.Group();
   const texture = new THREE.TextureLoader().load(bricksTexture);
-  const geometry = new THREE.BoxBufferGeometry(4, 2, 2);
+  const geometry = new THREE.BoxBufferGeometry(4, 1, 2);
   const material = new THREE.MeshLambertMaterial({ map: texture });
   const roof1 = new THREE.Mesh(geometry, material);
   const roof2 = new THREE.Mesh(geometry, material);
@@ -113,17 +113,17 @@ function buildRoof(scene, floors) {
 
   roof1.position.set(
     0,
-    FOUNDATION_HEIGHT / 2 + FLOOR_HEIGTH * floors.length,
+    FOUNDATION_HEIGHT / 2 + FLOOR_HEIGTH * floors.length + 0.5,
     3
   );
   roof2.position.set(
     0,
-    FOUNDATION_HEIGHT / 2 + FLOOR_HEIGTH * floors.length,
+    FOUNDATION_HEIGHT / 2 + FLOOR_HEIGTH * floors.length + 0.5,
     0
   );
   roof3.position.set(
     0,
-    FOUNDATION_HEIGHT / 2 + FLOOR_HEIGTH * floors.length,
+    FOUNDATION_HEIGHT / 2 + FLOOR_HEIGTH * floors.length + 0.5,
     -3
   );
 
@@ -141,29 +141,56 @@ function buildFloor(scene, baseY = FOUNDATION_HEIGHT / 2) {
 
   const group = new THREE.Group();
   const material = new THREE.MeshStandardMaterial({ map: texture });
-  const boxGeometry = new THREE.BoxGeometry(6, FLOOR_HEIGTH, 10);
-  const box = new THREE.Mesh(boxGeometry, material);
+
+  const wall1 = new THREE.Mesh(
+    new THREE.BoxGeometry(6.2, FLOOR_HEIGTH, 0.2),
+    material
+  );
+  wall1.position.set(0, baseY + FLOOR_HEIGTH / 2, 5);
+
+  const wall2 = new THREE.Mesh(
+    new THREE.BoxGeometry(0.2, FLOOR_HEIGTH, 10),
+    material
+  );
+  wall2.position.set(-3, baseY + FLOOR_HEIGTH / 2, 0);
+
+  const wall3 = new THREE.Mesh(
+    new THREE.BoxGeometry(6.2, FLOOR_HEIGTH, 0.2),
+    material
+  );
+  wall3.position.set(0, baseY + FLOOR_HEIGTH / 2, 2);
+
+  const wall4 = new THREE.Mesh(
+    new THREE.BoxGeometry(6.2, FLOOR_HEIGTH, 0.2),
+    material
+  );
+  wall4.position.set(0, baseY + FLOOR_HEIGTH / 2, -1);
+
+  const wall5 = new THREE.Mesh(
+    new THREE.BoxGeometry(6.2, FLOOR_HEIGTH, 0.2),
+    material
+  );
+  wall5.position.set(0, baseY + FLOOR_HEIGTH / 2, -5);
 
   const roofGeometry = new THREE.BoxGeometry(6.4, 0.2, 10.4);
   const roof = new THREE.Mesh(roofGeometry, material);
 
   roof.position.set(0, FLOOR_HEIGTH + baseY, 0);
-  box.position.set(0, FLOOR_HEIGTH / 2 + baseY, 0);
 
   const window1 = buildWindow();
-  window1.position.set(1.4, FLOOR_HEIGTH / 2 + baseY, 5);
+  window1.position.set(1.4, FLOOR_HEIGTH / 2 + baseY, 5.1);
 
   const window2 = buildWindow();
-  window2.position.set(-1.4, FLOOR_HEIGTH / 2 + baseY, 5);
-
-  const window3 = buildWindow();
-  window3.position.set(0, FLOOR_HEIGTH / 2 + baseY, -5);
+  window2.position.set(-1.4, FLOOR_HEIGTH / 2 + baseY, 5.1);
 
   group.add(roof);
-  group.add(box);
+  group.add(wall1);
+  group.add(wall2);
+  group.add(wall3);
+  group.add(wall4);
+  group.add(wall5);
   group.add(window1);
   group.add(window2);
-  group.add(window3);
 
   scene.add(group);
 
