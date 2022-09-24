@@ -4,7 +4,7 @@ import { initializeLocationModal, openLocationModal } from "./location-modal";
 
 const FOUNDATION_HEIGHT = 0.2;
 const FLOOR_HEIGTH = 1.6;
-const WALL_COLOR = 0xdadae4;
+const WALL_COLOR = 0x3e7da9;
 
 const floors = [];
 
@@ -79,7 +79,7 @@ function animate(renderer, scene, camera, orbit) {
 
 function buildScene() {
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x446481);
+  scene.background = new THREE.Color(0x424d5c);
 
   return scene;
 }
@@ -125,7 +125,7 @@ function buildBuilding(scene) {
 
 function buildFoundation(scene) {
   const boxGeometry = new THREE.BoxGeometry(30, FOUNDATION_HEIGHT, 30);
-  const boxMaterial = new THREE.MeshStandardMaterial({ color: 0xdeb775 });
+  const boxMaterial = new THREE.MeshStandardMaterial({ color: 0x5d767e });
   const box = new THREE.Mesh(boxGeometry, boxMaterial);
 
   box.position.set(0, 0, 0);
